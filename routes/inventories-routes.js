@@ -3,10 +3,12 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 import express from "express";
 const router = express.Router();
+import {getAllInventoryItems, getInventoryItemById} from '../controllers/inventory-controller.js';
 
-router.get("/", async (_req, res)=>{
-    const response = await knex("inventories");
-    res.status(200).json(response);
-});
+router.route("/")
+	.get(getAllInventoryItems)
+
+router.route('/:id')
+	.get(getInventoryItemById)
 
 export default router;
