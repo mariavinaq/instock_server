@@ -101,3 +101,58 @@ export const add = async (req, res) => {
     });
   }
 };
+
+export const edit = async (req,res) => {
+  const { warehouse_id, item_name, description, category, status, quantity } = req.body;
+
+  if (!warehouse_id || !item_name || !description || !category || !status || !quantity ) {
+    return res.status(400).json({
+      message: "Please provide missing data"
+    });
+  }
+
+  const warehouse = await knex("warehouses")
+    .where({id : warehouse_id})
+    .first();
+
+  if (!warehouse) {
+      return res.status(400).json({
+        message: "Invalid warehouse id"
+      })
+  }
+ 
+  if (isNaN(quantity) || Number(quantity) < 0){
+    return res.status(400).json({
+      message: "Quantity value must be a number"
+    })
+  }
+
+  try {
+    const updatedItem = await knex("inventories")
+      .where({ id: req.params.id })
+      .update({
+        warehouse_id,
+        item_name,
+        description,
+        category,
+        status,
+        quantity
+      });
+    
+    if (!updatedItem) {
+      return res.status(404).json({
+        message: `Could not find inventory: ${req.params.id}`
+      });
+    }
+
+    const newItem = await knex("inventories")
+      .where({ id: req.params.id })
+      .first();
+    
+    res.status(200).json(newItem);
+  } catch (error) {
+    res.status(500).json({
+      message: `Error updating inventory item: ${error}`
+    });
+  }
+};
