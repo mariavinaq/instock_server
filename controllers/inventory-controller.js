@@ -53,6 +53,7 @@ export const getInventoryItemById = async (req, res) => {
   }
 };
 
+//POST a new item in the inventories table
 export const add = async (req, res) => {
   const { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
@@ -102,6 +103,7 @@ export const add = async (req, res) => {
   }
 };
 
+//PUT/UPDATE existing item in the inventories table
 export const edit = async (req,res) => {
   const { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
