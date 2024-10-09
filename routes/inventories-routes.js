@@ -1,6 +1,3 @@
-import initKnex from "knex";
-import configuration from "../knexfile.js";
-const knex = initKnex(configuration);
 import express from "express";
 const router = express.Router();
 import {getAllInventoryItems, getInventoryItemById} from '../controllers/inventory-controller.js';
