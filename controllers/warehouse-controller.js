@@ -3,8 +3,13 @@ import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
 const index = async (_req, res) => {
-    const response = await knex("warehouses");
-    res.status(200).json(response);
+    try {
+        const response = await knex("warehouses");
+        res.status(200).json(response);
+      } catch (err) {
+        res.status(500).send(`Error retrieving warehouses: ${err}`);
+      }
+   
 }
 
 const findOne = async (req, res) => {
