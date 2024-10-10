@@ -1,9 +1,10 @@
 import express from "express";
 const router = express.Router();
-import {getAllInventoryItems, getInventoryItemById, edit, deleteItem} from '../controllers/inventory-controller.js';
+import {getAllInventoryItems, getInventoryItemById, edit, add, deleteItem} from '../controllers/inventory-controller.js';
 
 router.route("/")
 	.get(getAllInventoryItems)
+	.post(add)
 
 router.route('/:id')
 	.get(getInventoryItemById)
