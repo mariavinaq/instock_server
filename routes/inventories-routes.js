@@ -5,6 +5,7 @@ import {getAllInventoryItems, getInventoryItemById, edit, add, deleteItem} from 
 router.route("/")
 	.get(getAllInventoryItems)
 	.post(add)
+	.post(add)
 
 router.route('/:id')
 	.get(getInventoryItemById)
