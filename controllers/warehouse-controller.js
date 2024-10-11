@@ -108,33 +108,51 @@ const findOne = async (req, res) => {
       }
 }
 
-//SEARCH BY GIVEN STRING
-export const getStringMatchingRows = async (_req, res) => {
-    const s = _req.params.s;
+const add = async (req, res) => {
     try {
-      const inventoryItems = await knex('warehouses')
-      .select(
-        'warehouses.id', 
-        'warehouses.warehouse_name',
-        'warehouses.address', 
-        'warehouses.city', 
-        'warehouses.country', 
-        'warehouses.contact_name', 
-        'warehouses.contact_position',
-        'warehouses.contact_phone', 
-        'warehouses.contact_email', 
-      )
-      .whereILike('warehouses.warehouse_name', `${s}`)
-      .orWhereILike('warehouses.city', `${s}`)
-      .orWhereILike('warehouses.address',`%${s}%`)
-      .orWhereILike('warehouses.country', `${s}`)
-      .orWhereILike('warehouses.contact_name', `${s}`)
-      .orWhereILike('warehouses.contact_position', `%${s}%`)
-      .orWhereILike('warehouses.contact_phone', `%${s}%`)
-      .orWhereILike('warehouses.contact_email', `%${s}%`);                                  
-      res.status(200).json(inventoryItems);
-    } catch (error) {
-      res.status(400).send(`Error getting inventory items: ${error}`);
+        const completeDataValidation = () => {
+            const requiredData = ["warehouse_name", "address", "city", "country", "contact_name", "contact_position", "contact_phone", "contact_email"];
+            return requiredData.every(datum => Object.hasOwn(req.body, datum) && req.body[datum] !== "");
+        };
+
+        const phoneValidation = () => {
+            const phone = req.body.contact_phone;
+            return /^(\+1)\s(\(\d{3}\))\s(\d{3})-(\d{4})$/.test(phone);
+        }
+
+        const emailValidation = () => {
+            const email = req.body.contact_email;
+            return /^(\w+)@(\w+)\.(\w+)$/.test(email);
+        }
+
+        if (completeDataValidation() === false) {
+            return res.status(400).json({
+                message: `Unable to add warehouse information due to incomplete data`
+            });
+        }
+
+        if (phoneValidation() === false) {
+            return res.status(400).json({
+                message: `Unsuccessful add. Please input contact phone in the format: +1 (###) ###-####`
+            });
+        }
+
+        if (emailValidation() === false) {
+            return res.status(400).json({
+                message: `Unsuccessful add. Please input contact email in the format: example@mail.com`
+            });
+        }
+
+        const addedWarehouse = await knex("warehouses").insert(req.body);
+
+        const newWarehouse = addedWarehouse[0];
+        const createdWarehouse = await knex("user").where({id: newWarehouse});
+
+        res.status(201).json(createdWarehouse);
+        } catch (error) {
+        res.status(500).json({
+            message: `Unable to add data for warehouse with id:${req.params.id}`
+        });
     }
 };
 
@@ -168,5 +186,6 @@ export {
     findOne,
     update,
     remove,
-    getInventoriesByWarehouseId
+    getInventoriesByWarehouseId,
+    add
 }
