@@ -188,3 +188,28 @@ export const deleteItem = async (req, res) => {
     });
   }
 };
+
+//SEARCH BY GIVEN STRING
+export const getStringMatchingRows = async (_req, res) => {
+  const s = _req.params.s;
+  try {
+    const inventoryItems = await knex('inventories')
+    .select(
+      'inventories.id', 
+      'warehouses.warehouse_name',
+      'inventories.item_name', 
+      'inventories.description', 
+      'inventories.category', 
+      'inventories.status', 
+      'inventories.quantity'
+    )
+    .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
+    .whereILike('inventories.item_name', `${s}`)
+    .orWhereILike('inventories.category', `${s}`)
+    .orWhereILike('inventories.description',`%${s}%`)
+    .orWhereILike('warehouses.warehouse_name', `${s}`);                                  
+    res.status(200).json(inventoryItems);
+  } catch (error) {
+    res.status(400).send(`Error getting inventory items: ${error}`);
+  }
+};
