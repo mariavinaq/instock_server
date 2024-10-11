@@ -137,11 +137,36 @@ export const getStringMatchingRows = async (_req, res) => {
       res.status(400).send(`Error getting inventory items: ${error}`);
     }
 };
+
+const getInventoriesByWarehouseId = async (req, res) => {
+    const { id: warehouseId } = req.params;
   
+    try {
+      // Check if warehouse exists
+      const warehouse = await knex('warehouses')
+        .where({ id: warehouseId })
+        .first();
+  
+      if (!warehouse) {
+        return res.status(404).json({ message: "Warehouse not found." });
+      }
+  
+      // Fetch inventories for the warehouse
+      const inventories = await knex('inventories')
+        .select('id', 'item_name', 'category', 'status', 'quantity')
+        .where({ warehouse_id: warehouseId });
+  
+      // Return the inventories, or an empty array if none found
+      res.status(200).json(inventories);
+    } catch (error) {
+      res.status(500).json({ message: `Error retrieving inventories: ${error.message}` });
+    }
+  };  
 
 export {
     index,
     findOne,
     update,
-    remove
+    remove,
+    getInventoriesByWarehouseId
 }
