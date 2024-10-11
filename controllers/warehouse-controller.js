@@ -168,6 +168,36 @@ const getWarehouseItemByItemName = async (_req, res) => {
     }
   };
 
+//SEARCH BY GIVEN STRING
+export const getStringMatchingRows = async (_req, res) => {
+    const s = _req.params.s;
+    try {
+      const inventoryItems = await knex('warehouses')
+      .select(
+        'warehouses.id', 
+        'warehouses.warehouse_name',
+        'warehouses.address', 
+        'warehouses.city', 
+        'warehouses.country', 
+        'warehouses.contact_name', 
+        'warehouses.contact_position',
+        'warehouses.contact_phone', 
+        'warehouses.contact_email', 
+      )
+      .whereILike('warehouses.warehouse_name', `${s}`)
+      .orWhereILike('warehouses.city', `${s}`)
+      .orWhereILike('warehouses.address',`%${s}%`)
+      .orWhereILike('warehouses.country', `${s}`)
+      .orWhereILike('warehouses.contact_name', `${s}`)
+      .orWhereILike('warehouses.contact_position', `%${s}%`)
+      .orWhereILike('warehouses.contact_phone', `%${s}%`)
+      .orWhereILike('warehouses.contact_email', `%${s}%`);                                  
+      res.status(200).json(inventoryItems);
+    } catch (error) {
+      res.status(400).send(`Error getting inventory items: ${error}`);
+    }
+};
+
 export {
     index,
     findOne,
