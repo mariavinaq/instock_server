@@ -14,6 +14,7 @@ router.route('/:id')
 	.get(getInventoryItemById)
     .put(edit)
 	.delete(deleteItem)
+	.delete(deleteItem)
 
 
 
