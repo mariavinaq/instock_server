@@ -153,13 +153,26 @@ const add = async (req, res) => {
         res.status(500).json({
             message: `Unable to add data for warehouse with id:${req.params.id}`
         });
-    }
+    }   
 }
+const getWarehouseItemByItemName = async (_req, res) => {
+    const column = _req.params.column;
+    const order = _req.params.order;
+    try {
+      const warehouseItems = await knex("warehouses")
+        .orderBy(`warehouses.${column}`, `${order}`);
+  
+      res.status(200).json(warehouseItems);
+    } catch (error) {
+      res.status(400).send(`Error getting warehouse items: ${error}`);
+    }
+  };
 
 export {
     index,
     findOne,
     update,
     remove,
-    add
+    add,
+    getWarehouseItemByItemName
 }
