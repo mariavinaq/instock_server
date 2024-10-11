@@ -1,12 +1,12 @@
 import express from "express";
 const router = express.Router();
-import { add, findOne, index, remove, update, getStringMatchingRows } from "../controllers/warehouse-controller.js";
+import { add, findOne, index, remove, update } from "../controllers/warehouse-controller.js";
 
 
 router.get("/", index);
 router.post("/", add);
-router.route('/match/:s')
-	.get(getStringMatchingRows)
+// router.route('/match/:s')
+// 	.get(getStringMatchingRows)
 
 router.get("/:id", findOne);
 
