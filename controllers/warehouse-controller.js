@@ -184,11 +184,11 @@ export const getStringMatchingRows = async (_req, res) => {
         'warehouses.contact_phone', 
         'warehouses.contact_email', 
       )
-      .whereILike('warehouses.warehouse_name', `${s}`)
+      .whereILike('warehouses.warehouse_name', `%${s}%`)
       .orWhereILike('warehouses.city', `${s}`)
       .orWhereILike('warehouses.address',`%${s}%`)
       .orWhereILike('warehouses.country', `${s}`)
-      .orWhereILike('warehouses.contact_name', `${s}`)
+      .orWhereILike('warehouses.contact_name', `%${s}%`)
       .orWhereILike('warehouses.contact_position', `%${s}%`)
       .orWhereILike('warehouses.contact_phone', `%${s}%`)
       .orWhereILike('warehouses.contact_email', `%${s}%`);                                  
