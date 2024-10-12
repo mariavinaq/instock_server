@@ -57,14 +57,12 @@ export const getInventoryItemById = async (req, res) => {
 export const add = async (req, res) => {
   const { warehouse_id, item_name, description, category, status, quantity } = req.body;
 
-  // Fixing the condition with logical operators
   if (!warehouse_id || !item_name || !description || !category || !status || !quantity) {
     return res.status(400).json({
       message: "Please provide missing data"
     });
   }
 
-  // Check if the warehouse ID exists
   const warehouse = await knex("warehouses")
     .where({ id: warehouse_id })
     .first();
@@ -75,7 +73,6 @@ export const add = async (req, res) => {
     });
   }
 
-  // Fixing the quantity validation
   if (isNaN(Number(quantity)) || Number(quantity) < 0) {
     return res.status(400).json({
       message: "Quantity value must be a valid number"
@@ -100,7 +97,6 @@ export const add = async (req, res) => {
 
     res.status(201).json(newRecord);
   } catch (error) {
-    // Fixing the error message with proper backticks
     res.status(500).json({
       message: `Unable to create new inventory item: ${error}`
     });
@@ -213,3 +209,29 @@ export const getStringMatchingRows = async (_req, res) => {
     res.status(400).send(`Error getting inventory items: ${error}`);
   }
 };
+
+export const getInventoryItemByItemName = async (_req, res) => {
+  const column = _req.params.column;
+  const order = _req.params.order;
+  try {
+    const inventoryItems = await knex('inventories')
+      .select(
+        'inventories.id', 
+        'inventories.item_name', 
+        'inventories.description', 
+        'inventories.category', 
+        'inventories.status', 
+        'inventories.quantity', 
+        'inventories.created_at', 
+        'inventories.updated_at',
+        'warehouses.warehouse_name'  
+      )
+      .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
+      .orderBy(`inventories.${column}`, `${order}`);
+
+    res.status(200).json(inventoryItems);
+  } catch (error) {
+    res.status(400).send(`Error getting inventory items: ${error}`);
+  }
+};
+

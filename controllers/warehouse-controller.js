@@ -154,12 +154,83 @@ const add = async (req, res) => {
             message: `Unable to add data for warehouse with id:${req.params.id}`
         });
     }
-}
+};
+
+const getInventoriesByWarehouseId = async (req, res) => {
+    const { id: warehouseId } = req.params;
+  
+    try {
+      // Check if warehouse exists
+      const warehouse = await knex('warehouses')
+        .where({ id: warehouseId })
+        .first();
+  
+      if (!warehouse) {
+        return res.status(404).json({ message: "Warehouse not found." });
+      }
+  
+      // Fetch inventories for the warehouse
+      const inventories = await knex('inventories')
+        .select('id', 'item_name', 'category', 'status', 'quantity')
+        .where({ warehouse_id: warehouseId });
+  
+      // Return the inventories, or an empty array if none found
+      res.status(200).json(inventories);
+    } catch (error) {
+      res.status(500).json({ message: `Error retrieving inventories: ${error.message}` });
+    }
+  };  
+    
+
+const getWarehouseItemByItemName = async (_req, res) => {
+    const column = _req.params.column;
+    const order = _req.params.order;
+    try {
+      const warehouseItems = await knex("warehouses")
+        .orderBy(`warehouses.${column}`, `${order}`);
+  
+      res.status(200).json(warehouseItems);
+    } catch (error) {
+      res.status(400).send(`Error getting warehouse items: ${error}`);
+    }
+  };
+
+//SEARCH BY GIVEN STRING
+export const getStringMatchingRows = async (_req, res) => {
+    const s = _req.params.s;
+    try {
+      const inventoryItems = await knex('warehouses')
+      .select(
+        'warehouses.id', 
+        'warehouses.warehouse_name',
+        'warehouses.address', 
+        'warehouses.city', 
+        'warehouses.country', 
+        'warehouses.contact_name', 
+        'warehouses.contact_position',
+        'warehouses.contact_phone', 
+        'warehouses.contact_email', 
+      )
+      .whereILike('warehouses.warehouse_name', `%${s}%`)
+      .orWhereILike('warehouses.city', `${s}`)
+      .orWhereILike('warehouses.address',`%${s}%`)
+      .orWhereILike('warehouses.country', `${s}`)
+      .orWhereILike('warehouses.contact_name', `%${s}%`)
+      .orWhereILike('warehouses.contact_position', `%${s}%`)
+      .orWhereILike('warehouses.contact_phone', `%${s}%`)
+      .orWhereILike('warehouses.contact_email', `%${s}%`);                                  
+      res.status(200).json(inventoryItems);
+    } catch (error) {
+      res.status(400).send(`Error getting inventory items: ${error}`);
+    }
+};
 
 export {
     index,
     findOne,
     update,
     remove,
-    add
+    getInventoriesByWarehouseId,
+    add,
+    getWarehouseItemByItemName
 }
