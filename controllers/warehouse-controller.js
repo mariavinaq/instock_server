@@ -231,7 +231,6 @@ export {
     update,
     remove,
     getInventoriesByWarehouseId,
-    add
     add,
     getWarehouseItemByItemName
 }
