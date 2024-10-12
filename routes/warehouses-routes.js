@@ -1,6 +1,6 @@
 import express from "express";
 const router = express.Router();
-import { add, findOne, index, remove, update, getStringMatchingRows } from "../controllers/warehouse-controller.js";
+import { add, findOne, index, remove, update, getStringMatchingRows, getInventoriesByWarehouseId } from "../controllers/warehouse-controller.js";
 
 
 router.get("/", index);
@@ -12,5 +12,8 @@ router.get("/:id", findOne);
 
 router.put("/:id", update);
 router.delete("/:id", remove)
+
+router.route('/:id/inventories')
+  .get(getInventoriesByWarehouseId);
 
 export default router;
