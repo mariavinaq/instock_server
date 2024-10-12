@@ -180,6 +180,20 @@ const getInventoriesByWarehouseId = async (req, res) => {
       res.status(500).json({ message: `Error retrieving inventories: ${error.message}` });
     }
   };  
+    
+
+const getWarehouseItemByItemName = async (_req, res) => {
+    const column = _req.params.column;
+    const order = _req.params.order;
+    try {
+      const warehouseItems = await knex("warehouses")
+        .orderBy(`warehouses.${column}`, `${order}`);
+  
+      res.status(200).json(warehouseItems);
+    } catch (error) {
+      res.status(400).send(`Error getting warehouse items: ${error}`);
+    }
+  };
 
 //SEARCH BY GIVEN STRING
 export const getStringMatchingRows = async (_req, res) => {
@@ -197,11 +211,11 @@ export const getStringMatchingRows = async (_req, res) => {
         'warehouses.contact_phone', 
         'warehouses.contact_email', 
       )
-      .whereILike('warehouses.warehouse_name', `${s}`)
+      .whereILike('warehouses.warehouse_name', `%${s}%`)
       .orWhereILike('warehouses.city', `${s}`)
       .orWhereILike('warehouses.address',`%${s}%`)
       .orWhereILike('warehouses.country', `${s}`)
-      .orWhereILike('warehouses.contact_name', `${s}`)
+      .orWhereILike('warehouses.contact_name', `%${s}%`)
       .orWhereILike('warehouses.contact_position', `%${s}%`)
       .orWhereILike('warehouses.contact_phone', `%${s}%`)
       .orWhereILike('warehouses.contact_email', `%${s}%`);                                  
@@ -217,5 +231,6 @@ export {
     update,
     remove,
     getInventoriesByWarehouseId,
-    add
+    add,
+    getWarehouseItemByItemName
 }

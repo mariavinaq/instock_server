@@ -209,3 +209,29 @@ export const getStringMatchingRows = async (_req, res) => {
     res.status(400).send(`Error getting inventory items: ${error}`);
   }
 };
+
+export const getInventoryItemByItemName = async (_req, res) => {
+  const column = _req.params.column;
+  const order = _req.params.order;
+  try {
+    const inventoryItems = await knex('inventories')
+      .select(
+        'inventories.id', 
+        'inventories.item_name', 
+        'inventories.description', 
+        'inventories.category', 
+        'inventories.status', 
+        'inventories.quantity', 
+        'inventories.created_at', 
+        'inventories.updated_at',
+        'warehouses.warehouse_name'  
+      )
+      .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
+      .orderBy(`inventories.${column}`, `${order}`);
+
+    res.status(200).json(inventoryItems);
+  } catch (error) {
+    res.status(400).send(`Error getting inventory items: ${error}`);
+  }
+};
+
