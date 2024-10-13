@@ -202,7 +202,7 @@ export const getStringMatchingRows = async (_req, res) => {
     .join('warehouses', 'inventories.warehouse_id', '=', 'warehouses.id')
     .whereILike('inventories.item_name', `%${s}%`)
     .orWhereILike('inventories.category', `%${s}%`)
-    .orWhereILike('inventories.description',`%${s}%`)
+    .orWhereILike('inventories.quantity', `%${s}%`)
     .orWhereILike('warehouses.warehouse_name', `%${s}%`);                                  
     res.status(200).json(inventoryItems);
   } catch (error) {
