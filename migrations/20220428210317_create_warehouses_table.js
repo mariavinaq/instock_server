@@ -1,7 +1,4 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
+//Create schema of table
 export async function up(knex) {
   return await knex.schema.createTable('warehouses', (table) => {
     table.increments('id').primary();
@@ -18,10 +15,7 @@ export async function up(knex) {
   });
 };
 
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
+//drop table 
 export function down(knex) {
   return knex.schema.dropTable('warehouses');
 };

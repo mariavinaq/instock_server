@@ -1,7 +1,4 @@
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
+//create schema 
 export function up(knex) {
   return knex.schema.createTable('inventories', (table) => {
     table.increments('id').primary();
@@ -21,10 +18,7 @@ export function up(knex) {
   });
 };
 
-/**
- * @param { import("knex").Knex } knex
- * @returns { Promise<void> }
- */
+//drop table
 export function down(knex) {
   return knex.schema.dropTable('inventories');
 };
