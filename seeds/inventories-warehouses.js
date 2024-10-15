@@ -9,5 +9,4 @@ export async function seed(knex) {
   //INSERT ENTRIES
   await knex('warehouses').insert(warehousesData);
   await knex('inventories').insert(inventoriesData);
-
 };
