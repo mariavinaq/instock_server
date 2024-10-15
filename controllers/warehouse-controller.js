@@ -193,7 +193,7 @@ const getWarehouseItemByItemName = async (_req, res) => {
     }
 };
 
-//SEARCH BY GIVEN STRING
+//search by a given string or keyword
 export const getStringMatchingRows = async (_req, res) => {
     const s = _req.params.s;
     try {
