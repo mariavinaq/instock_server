@@ -1,5 +1,6 @@
-import "dotenv/config";
 
+import "dotenv/config";
+//connection config details
 export default {
   client: 'mysql2',
   connection: {

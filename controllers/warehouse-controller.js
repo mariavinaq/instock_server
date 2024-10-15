@@ -2,6 +2,7 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
+//get all warehouses
 const index = async (_req, res) => {
     try {
         const response = await knex("warehouses");
