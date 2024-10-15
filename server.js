@@ -2,26 +2,21 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import instock_routes from './routes/instock_routes.js';
+import warehousesRoutes from './routes/warehouses-routes.js';
+import inventoriesRoutes from './routes/inventories-routes.js'
 // Load environment variables from .env file
 dotenv.config();
-
 const app = express();
-
 // Middleware
 app.use(cors());
-//parse data
 app.use(express.json());
-
-// Routes
-app.use('/data', instock_routes);
-
+// Warehouses Routes
+app.use('/warehouses', warehousesRoutes);
+app.use('/inventories', inventoriesRoutes);
 // Basic API route
 app.get('/', (req, res) => {
   res.send('Welcome to the API');
 });
-
-
 // Start the server
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
