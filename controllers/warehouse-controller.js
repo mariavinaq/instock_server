@@ -2,6 +2,7 @@ import initKnex from "knex";
 import configuration from "../knexfile.js";
 const knex = initKnex(configuration);
 
+//get all warehouses
 const index = async (_req, res) => {
     try {
         const response = await knex("warehouses");
@@ -193,7 +194,7 @@ const getWarehouseItemByItemName = async (_req, res) => {
     }
 };
 
-//SEARCH BY GIVEN STRING
+//search by a given string or keyword
 export const getStringMatchingRows = async (_req, res) => {
     const s = _req.params.s;
     try {

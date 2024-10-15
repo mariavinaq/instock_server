@@ -10,6 +10,7 @@ const app = express();
 
 // Middleware
 app.use(cors());
+//parse data
 app.use(express.json());
 
 // Routes
